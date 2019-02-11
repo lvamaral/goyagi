@@ -5,12 +5,19 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/lob/logger-go"
+	"github.com/lvamaral/goyagi/pkg/application"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestNew(t *testing.T) {
-	srv := New()
+	log := logger.New()
+	app, err := application.New()
+	if err != nil {
+		log.Err(err).Fatal("failed to initialize application")
+	}
+	srv := New(app)
 
 	t.Run("serves registered endpoint", func(tt *testing.T) {
 		w := httptest.NewRecorder()

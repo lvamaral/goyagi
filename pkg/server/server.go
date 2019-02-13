@@ -8,6 +8,7 @@ import (
 	"github.com/labstack/echo"
 	"github.com/lob/logger-go"
 	"github.com/lvamaral/goyagi/pkg/application"
+	"github.com/lvamaral/goyagi/pkg/binder"
 	"github.com/lvamaral/goyagi/pkg/health"
 	"github.com/lvamaral/goyagi/pkg/movies"
 	"github.com/lvamaral/goyagi/pkg/signals"
@@ -18,6 +19,9 @@ func New(app application.App) *http.Server {
 	log := logger.New()
 
 	e := echo.New()
+
+	b := binder.New()
+	e.Binder = b
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%d", app.Config.Port),

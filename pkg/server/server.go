@@ -23,6 +23,8 @@ func New(app application.App) *http.Server {
 	b := binder.New()
 	e.Binder = b
 
+	e.Use(logger.Middleware())
+
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%d", app.Config.Port),
 		Handler: e,

@@ -30,20 +30,20 @@ func TestListHandler(t *testing.T) {
 		assert.True(tt, len(response) >= 23)
 	})
 
-	// t.Run("filters movies if limit is set", func(tt *testing.T) {
-	// 	c, rr := newContext(tt, nil)
-	// 	c.SetParamNames("Limit")
-	// 	c.SetParamValues("1")
-	//
-	// 	err := h.listHandler(c)
-	// 	assert.NoError(tt, err)
-	// 	assert.Equal(tt, http.StatusOK, rr.Code)
-	//
-	// 	var response []model.Movie
-	// 	err = json.Unmarshal(rr.Body.Bytes(), &response)
-	// 	require.NoError(tt, err)
-	// 	assert.True(tt, len(response) == 1)
-	// })
+	t.Run("filters movies if limit is set", func(tt *testing.T) {
+		c, rr := newContext(tt, nil)
+		c.SetParamNames("limit")
+		c.SetParamValues("1")
+
+		err := h.listHandler(c)
+		assert.NoError(tt, err)
+		assert.Equal(tt, http.StatusOK, rr.Code)
+
+		var response []model.Movie
+		err = json.Unmarshal(rr.Body.Bytes(), &response)
+		require.NoError(tt, err)
+		assert.True(tt, len(response) == 1)
+	})
 
 	// add tests for create Movie
 }

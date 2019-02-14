@@ -4,6 +4,7 @@ import (
 	"github.com/go-pg/pg"
 	"github.com/lvamaral/goyagi/pkg/config"
 	"github.com/lvamaral/goyagi/pkg/database"
+	"github.com/lvamaral/goyagi/pkg/sentry"
 	"github.com/pkg/errors"
 )
 
@@ -12,6 +13,7 @@ import (
 type App struct {
 	Config config.Config
 	DB     *pg.DB
+	Sentry sentry.Sentry
 }
 
 // New creates a new instance of App
@@ -23,5 +25,10 @@ func New() (App, error) {
 		return App{}, errors.Wrap(err, "application")
 	}
 
-	return App{cfg, db}, nil
+	sentry, err := sentry.New(cfg)
+	if err != nil {
+		return App{}, errors.Wrap(err, "application")
+	}
+
+	return App{cfg, db, sentry}, nil
 }

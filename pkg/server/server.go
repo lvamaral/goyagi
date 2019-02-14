@@ -9,8 +9,10 @@ import (
 	"github.com/lob/logger-go"
 	"github.com/lvamaral/goyagi/pkg/application"
 	"github.com/lvamaral/goyagi/pkg/binder"
+	"github.com/lvamaral/goyagi/pkg/errors"
 	"github.com/lvamaral/goyagi/pkg/health"
 	"github.com/lvamaral/goyagi/pkg/movies"
+	"github.com/lvamaral/goyagi/pkg/recovery"
 	"github.com/lvamaral/goyagi/pkg/signals"
 )
 
@@ -25,6 +27,9 @@ func New(app application.App) *http.Server {
 
 	e.Use(logger.Middleware())
 
+	// Register our recovery middleware after our logger middleware
+	e.Use(recovery.Middleware())
+
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%d", app.Config.Port),
 		Handler: e,
@@ -32,6 +37,7 @@ func New(app application.App) *http.Server {
 
 	health.RegisterRoutes(e)
 	movies.RegisterRoutes(e, app)
+	errors.RegisterErrorHandler(e, app)
 
 	// signals.Setup() returns a channel we can wait until it's closed before we
 	// shutdown our server
